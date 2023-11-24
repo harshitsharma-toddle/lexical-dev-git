@@ -1,0 +1,27 @@
+.app-wrapper {
+  padding: 0 80px;
+}
+
+.content-editable {
+  height: 400px;
+  width: 100%;
+  padding-top: 2px;
+  padding-left: 16px;
+  border: 1px solid black;
+  margin-top: 8px;
+}
+
+.content-editable:focus-visible {
+  outline: none;
+  border: 2px solid grey;
+}
+
+.placeholder-text {
+  position: absolute;
+  top: 19px;
+  left: 20px;
+}
+
+.editor-wrapper {
+  position: relative;
+}

@@ -12,11 +12,15 @@ export default function Editor() {
     theme,
   };
 
+  const placeholderText = () => {
+    return <div className="placeholder-text">Enter some text...</div>;
+  };
+
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <PlainTextPlugin
-        contentEditable={<ContentEditable />}
-        placeholder={<div>Enter some text...</div>}
+        contentEditable={<ContentEditable className="content-editable" />}
+        placeholder={placeholderText}
         ErrorBoundary={LexicalErrorBoundary}
       />
       <HistoryPlugin />
