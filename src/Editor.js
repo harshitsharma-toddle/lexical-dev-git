@@ -4,9 +4,9 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { TreeView } from "@lexical/react/LexicalTreeView";
+import theme from "./theme";
 import { useEffect } from "react";
-
-const theme = {};
 
 const MyOnChangePlugin = (props) => {
   const { onChange } = props;
@@ -18,10 +18,24 @@ const MyOnChangePlugin = (props) => {
   }, [onChange, editor]);
 };
 
+const TreeViewPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  return (
+    <TreeView
+      viewClassName="tree-view-output"
+      timeTravelPanelClassName="debug-timetravel-panel"
+      timeTravelButtonClassName="debug-timetravel-button"
+      timeTravelPanelSliderClassName="debug-timetravel-panel-slider"
+      timeTravelPanelButtonClassName="debug-timetravel-panel-button"
+      editor={editor}
+    />
+  );
+};
+
 export default function Editor() {
   const initialConfig = {
     namespace: "lexical-dev-editor",
-    theme,
+    theme: theme,
   };
 
   const placeholderText = () => {
@@ -41,6 +55,7 @@ export default function Editor() {
           console.log("EditorState", editor.editorState);
         }}
       />
+      <TreeViewPlugin />
     </LexicalComposer>
   );
 }
