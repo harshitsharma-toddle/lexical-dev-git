@@ -5,12 +5,17 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { TreeView } from "@lexical/react/LexicalTreeView";
+import { ParagraphNode, TextNode } from "lexical";
+import { $createColoredNode, ColoredNode } from "./ColoredNode";
+import { CustomParagraphNode } from "./CustomParagraphNode";
+
 import theme from "./theme";
 import { useEffect } from "react";
 
 const MyOnChangePlugin = (props) => {
   const { onChange } = props;
   const [editor] = useLexicalComposerContext();
+
   useEffect(() => {
     return editor.registerUpdateListener((editor) => {
       onChange(editor);
@@ -36,6 +41,27 @@ export default function Editor() {
   const initialConfig = {
     namespace: "lexical-dev-editor",
     theme: theme,
+    onError(error) {
+      throw error;
+    },
+    nodes: [
+      TextNode,
+      ColoredNode,
+      ParagraphNode,
+      CustomParagraphNode,
+      {
+        replace: TextNode,
+        with: (node) => {
+          return $createColoredNode(node.__text, "red");
+        },
+      },
+      {
+        replace: ParagraphNode,
+        with: (node) => {
+          return new CustomParagraphNode();
+        },
+      },
+    ],
   };
 
   const placeholderText = () => {
