@@ -1,13 +1,23 @@
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { TreeView } from "@lexical/react/LexicalTreeView";
-import { ParagraphNode, TextNode } from "lexical";
-import { $createColoredNode, ColoredNode } from "./ColoredNode";
-import { CustomParagraphNode } from "./CustomParagraphNode";
+import {
+  // $createTextNode,
+  // $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  ParagraphNode,
+  TextNode,
+} from "lexical";
+// import { $createColoredNode, ColoredNode } from "./ColoredNode";
+// import { CustomParagraphNode } from "./CustomParagraphNode";
+import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
+import { $setBlocksType } from "@lexical/selection";
 
 import theme from "./theme";
 import { useEffect } from "react";
@@ -37,7 +47,25 @@ const TreeViewPlugin = () => {
   );
 };
 
-export default function Editor() {
+const HeadingPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  const onClick = (tag) => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        $setBlocksType(selection, () => $createHeadingNode(tag));
+      }
+    });
+  };
+  return ["h1", "h2", "h3", "h4", "h5", "h6"].map((tag) => (
+    <button onClick={() => onClick(tag)} key={tag}>
+      {tag}
+    </button>
+  ));
+};
+
+export default function Editor(props) {
+  const { enableRichText } = props;
   const initialConfig = {
     namespace: "lexical-dev-editor",
     theme: theme,
@@ -46,21 +74,25 @@ export default function Editor() {
     },
     nodes: [
       TextNode,
-      ColoredNode,
+      // ColoredNode,
       ParagraphNode,
-      CustomParagraphNode,
+      // CustomParagraphNode,
+      HeadingNode,
+      /*
       {
         replace: TextNode,
         with: (node) => {
           return $createColoredNode(node.__text, "red");
         },
       },
-      {
+      */
+      /*{
         replace: ParagraphNode,
         with: (node) => {
           return new CustomParagraphNode();
         },
       },
+      */
     ],
   };
 
@@ -70,11 +102,20 @@ export default function Editor() {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <PlainTextPlugin
-        contentEditable={<ContentEditable className="content-editable" />}
-        placeholder={placeholderText}
-        ErrorBoundary={LexicalErrorBoundary}
-      />
+      <HeadingPlugin />
+      {enableRichText ? (
+        <RichTextPlugin
+          contentEditable={<ContentEditable className="content-editable" />}
+          placeholder={placeholderText}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+      ) : (
+        <PlainTextPlugin
+          contentEditable={<ContentEditable className="content-editable" />}
+          placeholder={placeholderText}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+      )}
       <HistoryPlugin />
       <MyOnChangePlugin
         onChange={(editor) => {
