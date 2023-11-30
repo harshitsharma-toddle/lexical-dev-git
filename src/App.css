@@ -9,6 +9,7 @@
   padding-left: 16px;
   border: 1px solid black;
   margin-top: 8px;
+  overflow: scroll;
 }
 
 .content-editable:focus-visible {
@@ -18,7 +19,7 @@
 
 .placeholder-text {
   position: absolute;
-  top: 19px;
+  top: 47px;
   left: 20px;
 }
 
