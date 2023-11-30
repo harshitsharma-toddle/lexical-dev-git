@@ -8,7 +8,7 @@ function App() {
         Lexical Dev [Study]
       </h1>
       <div className="editor-wrapper">
-        <Editor />
+        <Editor enableRichText />
       </div>
     </div>
   );
