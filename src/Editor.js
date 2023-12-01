@@ -18,6 +18,13 @@ import {
 // import { CustomParagraphNode } from "./CustomParagraphNode";
 import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
+import {
+  ListNode,
+  ListItemNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+} from "@lexical/list";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 
 import theme from "./theme";
 import { useEffect } from "react";
@@ -64,6 +71,31 @@ const HeadingPlugin = () => {
   ));
 };
 
+const MyListPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  const onClick = (listType) => {
+    if (listType === "ol") {
+      editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+      return;
+    }
+    editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+  };
+  return (
+    <>
+      {["ol", "ul"].map((listType) => (
+        <button
+          onClick={() => {
+            onClick(listType);
+          }}
+          key={listType}
+        >
+          {listType}
+        </button>
+      ))}
+    </>
+  );
+};
+
 export default function Editor(props) {
   const { enableRichText } = props;
   const initialConfig = {
@@ -74,10 +106,12 @@ export default function Editor(props) {
     },
     nodes: [
       TextNode,
-      // ColoredNode,
       ParagraphNode,
-      // CustomParagraphNode,
       HeadingNode,
+      ListNode,
+      ListItemNode,
+      // ColoredNode,
+      // CustomParagraphNode,
       /*
       {
         replace: TextNode,
@@ -103,6 +137,8 @@ export default function Editor(props) {
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <HeadingPlugin />
+      <ListPlugin />
+      <MyListPlugin />
       {enableRichText ? (
         <RichTextPlugin
           contentEditable={<ContentEditable className="content-editable" />}
