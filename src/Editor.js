@@ -11,6 +11,7 @@ import {
   // $getRoot,
   $getSelection,
   $isRangeSelection,
+  CLEAR_EDITOR_COMMAND,
   ParagraphNode,
   TextNode,
 } from "lexical";
@@ -25,6 +26,8 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
 } from "@lexical/list";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
+import { $createEmojiNode, EmojiNode } from "./EmojiNode";
 
 import theme from "./theme";
 import { useEffect } from "react";
@@ -38,6 +41,15 @@ const MyOnChangePlugin = (props) => {
       onChange(editor);
     });
   }, [onChange, editor]);
+};
+
+const ClearEditor = () => {
+  const [editor] = useLexicalComposerContext();
+  const onClick = () => {
+    editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
+    return;
+  };
+  return <button onClick={() => onClick()}>Clear Editor</button>;
 };
 
 const TreeViewPlugin = () => {
@@ -96,6 +108,33 @@ const MyListPlugin = () => {
   );
 };
 
+const EmojiPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  const emojiTransform = (node) => {
+    const textContent = node.getTextContent();
+    console.log("node", node);
+    if (textContent === ":)") {
+      node.replace($createEmojiNode("🙂"));
+    }
+  };
+  useEffect(() => {
+    const transformTextToEmoji = editor.registerNodeTransform(
+      TextNode,
+      emojiTransform
+    );
+    const transformTextInsideEmoji = editor.registerNodeTransform(
+      EmojiNode,
+      emojiTransform
+    );
+
+    return () => {
+      transformTextToEmoji();
+      transformTextInsideEmoji();
+    };
+  }, [editor]);
+  return null;
+};
+
 export default function Editor(props) {
   const { enableRichText } = props;
   const initialConfig = {
@@ -110,6 +149,7 @@ export default function Editor(props) {
       HeadingNode,
       ListNode,
       ListItemNode,
+      EmojiNode,
       // ColoredNode,
       // CustomParagraphNode,
       /*
@@ -139,12 +179,17 @@ export default function Editor(props) {
       <HeadingPlugin />
       <ListPlugin />
       <MyListPlugin />
+      <ClearEditorPlugin />
+      <ClearEditor />
       {enableRichText ? (
-        <RichTextPlugin
-          contentEditable={<ContentEditable className="content-editable" />}
-          placeholder={placeholderText}
-          ErrorBoundary={LexicalErrorBoundary}
-        />
+        <>
+          <RichTextPlugin
+            contentEditable={<ContentEditable className="content-editable" />}
+            placeholder={placeholderText}
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <EmojiPlugin />
+        </>
       ) : (
         <PlainTextPlugin
           contentEditable={<ContentEditable className="content-editable" />}
@@ -155,7 +200,7 @@ export default function Editor(props) {
       <HistoryPlugin />
       <MyOnChangePlugin
         onChange={(editor) => {
-          console.log("EditorState", editor.editorState);
+          // console.log("EditorState", editor.editorState);
         }}
       />
       <TreeViewPlugin />
