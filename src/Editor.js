@@ -15,7 +15,7 @@ import {
   ParagraphNode,
   TextNode,
 } from "lexical";
-// import { $createColoredNode, ColoredNode } from "./ColoredNode";
+import { $createColoredNode, ColoredNode } from "./ColoredNode";
 // import { CustomParagraphNode } from "./CustomParagraphNode";
 import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
@@ -110,29 +110,122 @@ const MyListPlugin = () => {
 
 const EmojiPlugin = () => {
   const [editor] = useLexicalComposerContext();
-  const emojiTransform = (node) => {
-    const textContent = node.getTextContent();
-    console.log("node", node);
-    if (textContent === ":)") {
-      node.replace($createEmojiNode("🙂"));
+  // simple approach (basic)
+  // const emojiTransform = (node) => {
+  //   const textContent = node.getTextContent();
+  //   console.log("node", node);
+  //   // if (textContent === ":)") {
+  //   //   node.replace($createEmojiNode("🙂"));
+  //   // }
+  //   // find characters inside textContent and replace just the particular target node with EmojiNode (below approach)
+  // };
+  const emojisMap = new Map([
+    [":)", "🙂"],
+    [":(", "🙁"],
+    ["<3", "❤"],
+    [":D", "😀"],
+    ["❤", "❤"],
+  ]);
+
+  function findTargetNodeAndReplace(node) {
+    const text = node.getTextContent();
+    for (let i = 0; i < text.length; i++) {
+      console.log("text[i]", text[i]);
+      console.log("text.slice(i, i + 2)", text.slice(i, i + 2));
+      const doesEmojiDataExist =
+        emojisMap.get(text[i]) || emojisMap.get(text.slice(i, i + 2));
+      // console.log("emojiData", doesEmojiDataExist);
+      if (doesEmojiDataExist !== undefined) {
+        const [emojiText] = doesEmojiDataExist;
+        let targetNode;
+        if (i === 0) {
+          [targetNode] = node.splitText(i + 2);
+        } else {
+          [, targetNode] = node.splitText(i, i + 2);
+        }
+
+        const emojiNode = $createEmojiNode(emojiText);
+        targetNode.replace(emojiNode);
+        return emojiNode;
+      }
     }
-  };
+
+    return null;
+  }
+
+  // let flag = false;
+  function transformTextNodeToEmoji(node) {
+    let targetNode = node;
+
+    while (targetNode !== null) {
+      if (!targetNode.isSimpleText()) {
+        return;
+      }
+
+      targetNode = findTargetNodeAndReplace(targetNode);
+    }
+    // flag = true;
+  }
+
+  // function transformEmojiTextInideEmojiNode(node) {
+  //   let targetNode = node;
+  //   // if (flag) {
+  //   //   flag = false;
+  //   //   return;
+  //   // }
+  //   // console.log("targetNode", targetNode);
+
+  //   // while (targetNode !== null) {
+  //   //   // if (targetNode.isSimpleText()) {
+  //   //   //   return;
+  //   //   // }
+  //   targetNode = findTargetNodeAndReplace(targetNode);
+  //   return targetNode;
+  //   // }
+  // }
+
   useEffect(() => {
     const transformTextToEmoji = editor.registerNodeTransform(
       TextNode,
-      emojiTransform
+      transformTextNodeToEmoji
     );
-    const transformTextInsideEmoji = editor.registerNodeTransform(
-      EmojiNode,
-      emojiTransform
-    );
+    // const transformTextInsideEmoji = editor.registerNodeTransform(
+    //   EmojiNode,
+    //   transformEmojiTextInideEmojiNode
+    // );
 
     return () => {
       transformTextToEmoji();
-      transformTextInsideEmoji();
+      // transformTextInsideEmoji();
     };
-  }, [editor]);
+  });
   return null;
+};
+
+const RGBtoTextPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  // if the typed text is red, change the text colour of this text to red
+  const transformTextNodeToRGB = (node) => {
+    const textContent = node.getTextContent();
+    if (textContent === "red") {
+      node.replace($createColoredNode("red", "red"));
+    }
+    if (textContent === "blue") {
+      node.replace($createColoredNode("blue", "blue"));
+    }
+    if (textContent === "green") {
+      node.replace($createColoredNode("green", "green"));
+    }
+  };
+  useEffect(() => {
+    const transformTextToRGB = editor.registerNodeTransform(
+      TextNode,
+      transformTextNodeToRGB
+    );
+    return () => {
+      transformTextToRGB();
+    };
+  });
 };
 
 export default function Editor(props) {
@@ -150,7 +243,7 @@ export default function Editor(props) {
       ListNode,
       ListItemNode,
       EmojiNode,
-      // ColoredNode,
+      ColoredNode,
       // CustomParagraphNode,
       /*
       {
@@ -189,6 +282,7 @@ export default function Editor(props) {
             ErrorBoundary={LexicalErrorBoundary}
           />
           <EmojiPlugin />
+          <RGBtoTextPlugin />
         </>
       ) : (
         <PlainTextPlugin
