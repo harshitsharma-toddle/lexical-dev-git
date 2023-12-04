@@ -155,7 +155,7 @@ const EmojiPlugin = () => {
 
   function transformTextNodeToEmoji(node) {
     let targetNode = node;
-    console.log("targetNode", targetNode);
+    // console.log("targetNode", targetNode);
     while (targetNode !== null) {
       if (
         !targetNode.isSimpleText() &&
@@ -189,16 +189,84 @@ const EmojiPlugin = () => {
 const RGBtoTextPlugin = () => {
   const [editor] = useLexicalComposerContext();
   // if the typed text is red, change the text colour of this text to red
+  function findTargetNodeAndReplace(node) {
+    const text = node.getTextContent();
+    // console.log("text", text);
+    let targetNode;
+    for (let i = 0; i < text.length; i++) {
+      if (
+        (text[i] === "r" &&
+          text[i + 1] === "e" &&
+          text[i + 2] === "d" &&
+          text[i + 3] === " ") ||
+        (text[i] === " " &&
+          text[i + 1] === "r" &&
+          text[i + 2] === "e" &&
+          text[i + 3] === "d" &&
+          text[i + 4] === " ")
+      ) {
+        if (text[i] === " ") {
+          [, targetNode] = node.splitText(i + 1, i + 4);
+          // console.log("targetNode", targetNode);
+        } else [targetNode] = node.splitText(i, i + 3);
+        const coloredNode = $createColoredNode("red", "red");
+        targetNode.replace(coloredNode);
+        return coloredNode;
+      }
+      if (
+        (text[i] === "g" &&
+          text[i + 1] === "r" &&
+          text[i + 2] === "e" &&
+          text[i + 3] === "e" &&
+          text[i + 4] === "n" &&
+          text[i + 5] === " ") ||
+        (text[i] === " " &&
+          text[i + 1] === "g" &&
+          text[i + 2] === "r" &&
+          text[i + 3] === "e" &&
+          text[i + 4] === "e" &&
+          text[i + 5] === "n" &&
+          text[i + 6] === " ")
+      ) {
+        if (text[i] === " ") {
+          [, targetNode] = node.splitText(i + 1, i + 6);
+        } else [targetNode] = node.splitText(i, i + 5);
+        const coloredNode = $createColoredNode("green", "green");
+        targetNode.replace(coloredNode);
+        return coloredNode;
+      }
+      if (
+        (text[i] === "b" &&
+          text[i + 1] === "l" &&
+          text[i + 2] === "u" &&
+          text[i + 3] === "e" &&
+          text[i + 4] === " ") ||
+        (text[i] === " " &&
+          text[i + 1] === "b" &&
+          text[i + 2] === "l" &&
+          text[i + 3] === "u" &&
+          text[i + 4] === "e" &&
+          text[i + 5] === " ")
+      ) {
+        if (text[i] === " ") {
+          [, targetNode] = node.splitText(i + 1, i + 5);
+        } else [targetNode] = node.splitText(i, i + 4);
+        const coloredNode = $createColoredNode("blue", "blue");
+        targetNode.replace(coloredNode);
+        return coloredNode;
+      }
+    }
+    return null;
+  }
   const transformTextNodeToRGB = (node) => {
-    const textContent = node.getTextContent();
-    if (textContent === "red") {
-      node.replace($createColoredNode("red", "red"));
-    }
-    if (textContent === "blue") {
-      node.replace($createColoredNode("blue", "blue"));
-    }
-    if (textContent === "green") {
-      node.replace($createColoredNode("green", "green"));
+    let targetNode = node;
+    // console.log("targetNode", targetNode);
+    while (targetNode !== null) {
+      if (!targetNode.isSimpleText()) {
+        return;
+      }
+      // console.log("infinite loop");
+      targetNode = findTargetNodeAndReplace(targetNode);
     }
   };
   useEffect(() => {
