@@ -28,6 +28,17 @@ export class EmojiNode extends TextNode {
     super.updateDOM(prevNode, inner, config);
     return false;
   }
+
+  exportJSON() {
+    return {
+      type: "emoji-node",
+      text: this.__text,
+    };
+  }
+
+  static importJSON(json) {
+    return $createEmojiNode(json.text);
+  }
 }
 
 export function $isEmojiNode(node) {

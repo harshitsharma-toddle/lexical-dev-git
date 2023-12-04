@@ -26,6 +26,18 @@ export class ColoredNode extends TextNode {
     }
     return isUpdated;
   }
+
+  exportJSON() {
+    return {
+      type: "colored",
+      text: this.__text,
+      color: this.__color,
+    };
+  }
+
+  static importJSON(json) {
+    return $createColoredNode(json.text, json.color);
+  }
 }
 
 export function $createColoredNode(text, color) {
