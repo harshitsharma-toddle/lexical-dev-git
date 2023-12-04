@@ -27,7 +27,7 @@ import {
 } from "@lexical/list";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-import { $createEmojiNode, EmojiNode } from "./EmojiNode";
+import { $createEmojiNode, EmojiNode, $isEmojiNode } from "./EmojiNode";
 
 import theme from "./theme";
 import { useEffect } from "react";
@@ -130,8 +130,8 @@ const EmojiPlugin = () => {
   function findTargetNodeAndReplace(node) {
     const text = node.getTextContent();
     for (let i = 0; i < text.length; i++) {
-      console.log("text[i]", text[i]);
-      console.log("text.slice(i, i + 2)", text.slice(i, i + 2));
+      // console.log("text[i]", text[i]);
+      // console.log("text.slice(i, i + 2)", text.slice(i, i + 2));
       const doesEmojiDataExist =
         emojisMap.get(text[i]) || emojisMap.get(text.slice(i, i + 2));
       // console.log("emojiData", doesEmojiDataExist);
@@ -153,50 +153,34 @@ const EmojiPlugin = () => {
     return null;
   }
 
-  // let flag = false;
   function transformTextNodeToEmoji(node) {
     let targetNode = node;
-
+    console.log("targetNode", targetNode);
     while (targetNode !== null) {
-      if (!targetNode.isSimpleText()) {
+      if (
+        !targetNode.isSimpleText() &&
+        !($isEmojiNode(targetNode) && targetNode.getTextContent().length > 1)
+      ) {
         return;
       }
 
       targetNode = findTargetNodeAndReplace(targetNode);
     }
-    // flag = true;
   }
-
-  // function transformEmojiTextInideEmojiNode(node) {
-  //   let targetNode = node;
-  //   // if (flag) {
-  //   //   flag = false;
-  //   //   return;
-  //   // }
-  //   // console.log("targetNode", targetNode);
-
-  //   // while (targetNode !== null) {
-  //   //   // if (targetNode.isSimpleText()) {
-  //   //   //   return;
-  //   //   // }
-  //   targetNode = findTargetNodeAndReplace(targetNode);
-  //   return targetNode;
-  //   // }
-  // }
 
   useEffect(() => {
     const transformTextToEmoji = editor.registerNodeTransform(
       TextNode,
       transformTextNodeToEmoji
     );
-    // const transformTextInsideEmoji = editor.registerNodeTransform(
-    //   EmojiNode,
-    //   transformEmojiTextInideEmojiNode
-    // );
+    const transformTextInsideEmoji = editor.registerNodeTransform(
+      EmojiNode,
+      transformTextNodeToEmoji
+    );
 
     return () => {
       transformTextToEmoji();
-      // transformTextInsideEmoji();
+      transformTextInsideEmoji();
     };
   });
   return null;
