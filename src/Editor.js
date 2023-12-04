@@ -124,7 +124,7 @@ const EmojiPlugin = () => {
     [":(", "🙁"],
     ["<3", "❤"],
     [":D", "😀"],
-    ["❤", "❤"],
+    [";)", "😉"],
   ]);
 
   function findTargetNodeAndReplace(node) {
