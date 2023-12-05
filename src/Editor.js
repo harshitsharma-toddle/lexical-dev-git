@@ -14,7 +14,7 @@ import HeadingPlugin from "./plugins/HeadingPlugin";
 import MyListPlugin from "./plugins/MyListPlugin";
 import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import EmojiPlugin from "./plugins/EmojiPlugin";
-import RGBtoTextPlugin from "./plugins/RGBtoTextPlugin";
+import TextToColoredPlugin from "./plugins/TextToColoredPlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -34,7 +34,7 @@ export default function Editor(props) {
             ErrorBoundary={LexicalErrorBoundary}
           />
           <EmojiPlugin />
-          <RGBtoTextPlugin />
+          <TextToColoredPlugin />
         </>
       ) : (
         <PlainTextPlugin

@@ -9,7 +9,7 @@ import {
   $isColoredTextNode,
   ColoredTextNode,
 } from "../../nodes/ColoredTextNode";
-import { transformTextNodeToRGB } from "../RGBtoTextPlugin";
+import { transformTextNodeToRGB } from "../TextToColoredPlugin";
 import { TextNode } from "lexical";
 
 export default function EmojiPlugin() {

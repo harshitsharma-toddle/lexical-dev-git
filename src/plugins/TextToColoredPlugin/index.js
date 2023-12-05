@@ -146,7 +146,7 @@ export const transformTextNodeToRGB = (node) => {
   }
 };
 
-export default function RGBtoTextPlugin() {
+export default function TextToColoredPlugin() {
   const [editor] = useLexicalComposerContext();
   // if the typed text is red, green or blue change the font colour of this text to red, green or blue respectively
 
