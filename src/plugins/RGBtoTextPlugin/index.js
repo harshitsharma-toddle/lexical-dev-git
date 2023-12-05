@@ -9,11 +9,62 @@ import { TextNode } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 function findTargetNodeAndReplace(node) {
+  const coloredTextValues = ["red", "green", "blue"];
+
+  for (const color of coloredTextValues) {
+    const words = node.getTextContent().split(" ");
+
+    for (let i = 0; i < words.length - 1; i++) {
+      if (words[i] === color && words[i + 1] === "") {
+        let targetNode;
+
+        if (i === 0) {
+          [targetNode] = node.splitText(0, color.length);
+        } else {
+          const countChars = words
+            .slice(0, i)
+            .reduce((sum, word) => sum + word.length + 1, 0);
+          [, targetNode] = node.splitText(
+            countChars,
+            countChars + color.length
+          );
+        }
+
+        const coloredNode = $createColoredTextNode(color, color);
+        targetNode.replace(coloredNode);
+        return coloredNode;
+      }
+    }
+  }
+
+  /*
+  refined approach (to be refactored)
   const text = node.getTextContent();
   // console.log("text", text);
   let targetNode;
-
-  for (let i = 0; i < text.length; i++) {
+  let words = text.split(" ");
+  // console.log("words", words); // ["hello","red",""]
+  for (let i = 0; i < words.length; i++) {
+    if (words[i] === "red" && words[i + 1] === "") {
+      if (i === 0) {
+        [targetNode] = node.splitText(0, 3);
+      } else {
+        let countChars = 0;
+        for (let j = 0; j < i; j++) {
+          countChars += words[j].length + 1;
+        }
+        // console.log("countChars", countChars);
+        [, targetNode] = node.splitText(countChars, countChars + 3);
+      }
+      const coloredNode = $createColoredTextNode("red", "red");
+      targetNode.replace(coloredNode);
+      return coloredNode;
+    }
+  }
+  */
+  /*
+    basic approach (unrefactored code) 
+    for (let i = 0; i < text.length; i++) {
     if (
       (text[i] === "r" &&
         text[i + 1] === "e" &&
@@ -76,11 +127,11 @@ function findTargetNodeAndReplace(node) {
       return coloredNode;
     }
   }
+  */
   return null;
 }
 export const transformTextNodeToRGB = (node) => {
   let targetNode = node;
-  // console.log("targetNode", targetNode);
   while (targetNode !== null) {
     if (
       !targetNode.isSimpleText() &&
@@ -91,14 +142,13 @@ export const transformTextNodeToRGB = (node) => {
     ) {
       return;
     }
-    // console.log("infinite loop");
     targetNode = findTargetNodeAndReplace(targetNode);
   }
 };
 
 export default function RGBtoTextPlugin() {
   const [editor] = useLexicalComposerContext();
-  // if the typed text is red, change the text colour of this text to red
+  // if the typed text is red, green or blue change the font colour of this text to red, green or blue respectively
 
   useEffect(() => {
     const transformTextToRGB = editor.registerNodeTransform(

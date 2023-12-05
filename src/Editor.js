@@ -8,7 +8,6 @@ import config from "./config";
 import placeholderText from "./utils/placeholderText";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-
 // import OnChangePlugin from "./plugins/OnChangePlugin";
 import ClearEditor from "./plugins/ClearEditor";
 import HeadingPlugin from "./plugins/HeadingPlugin";
