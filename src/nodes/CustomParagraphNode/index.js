@@ -14,4 +14,15 @@ export class CustomParagraphNode extends ParagraphNode {
     dom.style = "background: green";
     return dom;
   }
+
+  exportJSON() {
+    return {
+      ...super.exportJSON(),
+      type: "custom-paragraph",
+    };
+  }
+
+  static importJSON() {
+    return new CustomParagraphNode();
+  }
 }

@@ -1,5 +1,5 @@
 import { TextNode } from "lexical";
-export class ColoredNode extends TextNode {
+export class ColoredTextNode extends TextNode {
   constructor(text, color, key) {
     super(text, key);
     this.__color = color;
@@ -10,7 +10,7 @@ export class ColoredNode extends TextNode {
   }
 
   static clone(node) {
-    return new ColoredNode(node.__text, node.__color, node.__key);
+    return new ColoredTextNode(node.__text, node.__color, node.__key);
   }
 
   createDOM(config) {
@@ -29,6 +29,7 @@ export class ColoredNode extends TextNode {
 
   exportJSON() {
     return {
+      ...super.exportJSON(),
       type: "colored",
       text: this.__text,
       color: this.__color,
@@ -36,14 +37,14 @@ export class ColoredNode extends TextNode {
   }
 
   static importJSON(json) {
-    return $createColoredNode(json.text, json.color);
+    return $createColoredTextNode(json.text, json.color);
   }
 }
 
-export function $createColoredNode(text, color) {
-  return new ColoredNode(text, color);
+export function $createColoredTextNode(text, color) {
+  return new ColoredTextNode(text, color);
 }
 
-export function $isColoredNode(node) {
-  return node instanceof ColoredNode;
+export function $isColoredTextNode(node) {
+  return node instanceof ColoredTextNode;
 }
