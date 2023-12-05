@@ -15,6 +15,7 @@ import MyListPlugin from "./plugins/MyListPlugin";
 import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import EmojiPlugin from "./plugins/EmojiPlugin";
 import TextToColoredPlugin from "./plugins/TextToColoredPlugin";
+// import HighlightPlugin from "./plugins/HighlightPlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -24,6 +25,7 @@ export default function Editor(props) {
       <HeadingPlugin />
       <ListPlugin />
       <MyListPlugin />
+      {/* <HighlightPlugin /> */}
       <ClearEditorPlugin />
       <ClearEditor />
       {enableRichText ? (
