@@ -11,7 +11,6 @@ export default function HighlightPlugin() {
 
       if ($isRangeSelection(selection)) {
         $patchStyleText(selection, {
-          color: selection.style.color,
           "background-color":
             highlightColor !== "clear" ? highlightColor : "transparent",
         });
