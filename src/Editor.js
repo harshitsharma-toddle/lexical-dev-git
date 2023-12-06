@@ -16,6 +16,7 @@ import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import EmojiPlugin from "./plugins/EmojiPlugin";
 import TextToColoredPlugin from "./plugins/TextToColoredPlugin";
 import HighlightPlugin from "./plugins/HighlightPlugin";
+import LockEditor from "./plugins/LockEditor";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -28,6 +29,7 @@ export default function Editor(props) {
       <HighlightPlugin />
       <ClearEditorPlugin />
       <ClearEditor />
+      <LockEditor />
       {enableRichText ? (
         <>
           <RichTextPlugin
