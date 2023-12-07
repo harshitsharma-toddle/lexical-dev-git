@@ -192,7 +192,7 @@ function MentionsTypeaheadMenuItem({
   );
 }
 
-export default function NewMentionsPlugin() {
+export default function MentionsPlugin() {
   const [editor] = useLexicalComposerContext();
 
   const [queryString, setQueryString] = useState(null);
