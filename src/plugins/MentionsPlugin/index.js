@@ -149,7 +149,7 @@ function checkForAtSignMentions(text, minMatchLength) {
 }
 
 function getPossibleQueryMatch(text) {
-  return checkForAtSignMentions(text, 1);
+  return checkForAtSignMentions(text, 0);
 }
 
 class MentionTypeaheadOption extends MenuOption {
