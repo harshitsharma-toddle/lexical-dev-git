@@ -17,6 +17,7 @@ import EmojiPlugin from "./plugins/EmojiPlugin";
 import TextToColoredPlugin from "./plugins/TextToColoredPlugin";
 import HighlightPlugin from "./plugins/HighlightPlugin";
 import LockEditor from "./plugins/LockEditor";
+import MentionsPlugin from "./plugins/MentionsPlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -39,6 +40,7 @@ export default function Editor(props) {
           />
           <EmojiPlugin />
           <TextToColoredPlugin />
+          <MentionsPlugin />
         </>
       ) : (
         <PlainTextPlugin
