@@ -6,6 +6,7 @@ import { HeadingNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
 import { EmojiNode } from "../nodes/EmojiNode";
 // import { HighlightTextNode } from "../nodes/HighlightTextNode";
+import { MentionNode } from "../nodes/MentionNode";
 
 const config = {
   namespace: "lexical-dev-editor",
@@ -21,6 +22,7 @@ const config = {
     ListItemNode,
     EmojiNode,
     ColoredTextNode,
+    MentionNode,
     // HighlightTextNode,
     // CustomParagraphNode,
     /*{
