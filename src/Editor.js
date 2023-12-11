@@ -18,6 +18,8 @@ import TextToColoredPlugin from "./plugins/TextToColoredPlugin";
 import HighlightPlugin from "./plugins/HighlightPlugin";
 import LockEditor from "./plugins/LockEditor";
 import MentionsPlugin from "./plugins/MentionsPlugin";
+import ImagePlugin from "./plugins/ImagePlugin";
+import DragDropPaste from "./plugins/DragDropPastePlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -41,6 +43,8 @@ export default function Editor(props) {
           <EmojiPlugin />
           <TextToColoredPlugin />
           <MentionsPlugin />
+          <DragDropPaste />
+          <ImagePlugin />
         </>
       ) : (
         <PlainTextPlugin
