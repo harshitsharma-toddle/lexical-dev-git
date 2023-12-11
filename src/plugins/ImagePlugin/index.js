@@ -31,8 +31,8 @@ import {
 } from "@lexical/clipboard";
 import { eventFiles } from "@lexical/rich-text";
 
-const DRAG_DROP_PASTE = createCommand("DRAG_DROP_PASTE_FILE");
-const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
+export const DRAG_DROP_PASTE = createCommand("DRAG_DROP_PASTE_FILE");
+export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 
 export default function ImagePlugin() {
   const [editor] = useLexicalComposerContext();
