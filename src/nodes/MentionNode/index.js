@@ -90,7 +90,7 @@ export class MentionNode extends TextNode {
 
 export function $createMentionNode(mentionName) {
   const mentionNode = new MentionNode(mentionName);
-  mentionNode.setMode("segmented");
+  mentionNode.setMode("token");
   return $applyNodeReplacement(mentionNode);
 }
 
