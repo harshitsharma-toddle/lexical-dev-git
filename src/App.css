@@ -125,3 +125,42 @@
 i.user {
   background-image: url(./themes/user.svg);
 }
+
+.image-resizer {
+  display: block;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  background-color: #fff;
+  border: 2px solid rgb(60, 132, 244);
+  border-radius: 2px;
+}
+
+.image-resizer.image-resizer-ne {
+  top: -6px;
+  right: -6px;
+  cursor: ne-resize;
+}
+
+.image-resizer.image-resizer-se {
+  bottom: -2px;
+  right: -6px;
+  cursor: nwse-resize;
+}
+
+.image-resizer.image-resizer-sw {
+  bottom: -2px;
+  left: -6px;
+  cursor: sw-resize;
+}
+
+.image-resizer.image-resizer-nw {
+  top: -6px;
+  left: -6px;
+  cursor: nw-resize;
+}
+
+.lexical-dev-image {
+  position: relative;
+  display: inline-block;
+}

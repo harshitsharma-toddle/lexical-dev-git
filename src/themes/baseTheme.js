@@ -8,6 +8,7 @@ const theme = {
     h1: "lexical-dev-heading-h1",
     h2: "lexical-dev-heading-h2",
   },
+  image: "lexical-dev-image",
 };
 
 export default theme;
