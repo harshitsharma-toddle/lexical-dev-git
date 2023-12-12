@@ -2,14 +2,14 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { useEffect } from "react";
 import {
   $createEmojiNode,
-  EmojiNode,
+  // EmojiNode,
   $isEmojiNode,
 } from "../../nodes/EmojiNode";
-import {
-  $isColoredTextNode,
-  ColoredTextNode,
-} from "../../nodes/ColoredTextNode";
-import { transformTextNodeToRGB } from "../TextToColoredPlugin";
+// import {
+//   $isColoredTextNode,
+//   ColoredTextNode,
+// } from "../../nodes/ColoredTextNode";
+// import { transformTextNodeToRGB } from "../TextToColoredPlugin";
 import { TextNode } from "lexical";
 
 export default function EmojiPlugin() {
@@ -32,76 +32,51 @@ export default function EmojiPlugin() {
     [";)", "😉"],
   ]);
 
-  function findTargetNodeAndReplace(node) {
-    const text = node.getTextContent();
-    for (let i = 0; i < text.length; i++) {
-      // console.log("text[i]", text[i]);
-      // console.log("text.slice(i, i + 2)", text.slice(i, i + 2));
-      const doesEmojiDataExist =
-        emojisMap.get(text[i]) || emojisMap.get(text.slice(i, i + 2));
-      // console.log("emojiData", doesEmojiDataExist);
-      if (doesEmojiDataExist !== undefined) {
-        const [emojiText] = doesEmojiDataExist;
-        let targetNode;
-        if (i === 0) {
-          [targetNode] = node.splitText(i + 2);
-        } else {
-          [, targetNode] = node.splitText(i, i + 2);
-        }
-
-        const emojiNode = $createEmojiNode(emojiText);
-        targetNode.replace(emojiNode);
-        return emojiNode;
-      }
-    }
-
-    return null;
-  }
-
-  function transformTextNodeToEmoji(node) {
-    let targetNode = node;
-    // console.log("targetNode", targetNode);
-    while (targetNode !== null) {
-      if (
-        !targetNode.isSimpleText() &&
-        !($isEmojiNode(targetNode) && targetNode.getTextContent().length > 1) &&
-        !(
-          $isColoredTextNode(targetNode) &&
-          targetNode.getTextContent().length > 1
-        )
-      ) {
-        return;
-      }
-
-      targetNode = findTargetNodeAndReplace(targetNode);
-    }
-  }
-
   useEffect(() => {
     const transformTextToEmoji = editor.registerNodeTransform(
       TextNode,
       transformTextNodeToEmoji
     );
-    const transformTextInsideEmojiNode = editor.registerNodeTransform(
-      EmojiNode,
-      transformTextNodeToEmoji
-    );
+    function transformTextNodeToEmoji(node) {
+      let targetNode = node;
+      // console.log("targetNode", targetNode);
+      while (targetNode !== null) {
+        if (
+          !targetNode.isSimpleText() &&
+          !($isEmojiNode(targetNode) && targetNode.getTextContent().length > 1)
+        ) {
+          return;
+        }
+        targetNode = findTargetNodeAndReplace(targetNode);
+      }
+    }
 
-    const transformRGBTextInsideEmojiNode = editor.registerNodeTransform(
-      EmojiNode,
-      transformTextNodeToRGB
-    );
+    function findTargetNodeAndReplace(node) {
+      const text = node.getTextContent();
+      for (let i = 0; i < text.length; i++) {
+        // console.log("text[i]", text[i]);
+        // console.log("text.slice(i, i + 2)", text.slice(i, i + 2));
+        const doesEmojiDataExist =
+          emojisMap.get(text[i]) || emojisMap.get(text.slice(i, i + 2));
+        // console.log("emojiData", doesEmojiDataExist);
+        if (doesEmojiDataExist !== undefined) {
+          const [emojiText] = doesEmojiDataExist;
+          let targetNode;
+          if (i === 0) {
+            [targetNode] = node.splitText(i + 2);
+          } else {
+            [, targetNode] = node.splitText(i, i + 2);
+          }
 
-    const transformRGBTextInsideColoredNode = editor.registerNodeTransform(
-      ColoredTextNode,
-      transformTextNodeToEmoji
-    );
-
+          const emojiNode = $createEmojiNode(emojiText);
+          targetNode.replace(emojiNode);
+          return emojiNode;
+        }
+      }
+      return null;
+    }
     return () => {
       transformTextToEmoji();
-      transformTextInsideEmojiNode();
-      transformRGBTextInsideEmojiNode();
-      transformRGBTextInsideColoredNode();
     };
   });
   return null;

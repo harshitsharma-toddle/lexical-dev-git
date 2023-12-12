@@ -1,4 +1,4 @@
-import { TextNode } from "lexical";
+import { TextNode, $applyNodeReplacement } from "lexical";
 
 export class EmojiNode extends TextNode {
   static getType() {
@@ -47,5 +47,7 @@ export function $isEmojiNode(node) {
 }
 
 export function $createEmojiNode(emojiText) {
-  return new EmojiNode(emojiText);
+  const emojiNode = new EmojiNode(emojiText);
+  emojiNode.setMode("token");
+  return $applyNodeReplacement(emojiNode);
 }
