@@ -20,6 +20,7 @@ import LockEditor from "./plugins/LockEditor";
 import MentionsPlugin from "./plugins/MentionsPlugin";
 import ImagePlugin from "./plugins/ImagePlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
+import { ContentLoadPlugin } from "./plugins/ContentLoadPlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -40,6 +41,7 @@ export default function Editor(props) {
             placeholder={placeholderText}
             ErrorBoundary={LexicalErrorBoundary}
           />
+          <ContentLoadPlugin content={props.content} />
           <EmojiPlugin />
           <TextToColoredPlugin />
           <MentionsPlugin />

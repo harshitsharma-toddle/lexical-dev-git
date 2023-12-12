@@ -1,5 +1,16 @@
 import { TextNode, $applyNodeReplacement } from "lexical";
+function convertEmojiElement(domNode) {
+  const textContent = domNode.textContent;
 
+  if (textContent !== null) {
+    const node = $createEmojiNode(textContent);
+    return {
+      node,
+    };
+  }
+
+  return null;
+}
 export class EmojiNode extends TextNode {
   static getType() {
     return "emoji-node";
@@ -10,10 +21,8 @@ export class EmojiNode extends TextNode {
   }
 
   createDOM(config) {
-    const dom = document.createElement("span");
-    const inner = super.createDOM(config);
-    inner.className = "emoji-inner";
-    dom.appendChild(inner);
+    const dom = super.createDOM(config);
+    dom.className = "emoji-inner";
     return dom;
   }
 
@@ -39,6 +48,27 @@ export class EmojiNode extends TextNode {
 
   static importJSON(json) {
     return $createEmojiNode(json.text);
+  }
+
+  exportDOM() {
+    const element = document.createElement("span");
+    element.setAttribute("data-lexical-emoji", "true");
+    element.textContent = this.__text;
+    return { element };
+  }
+
+  static importDOM() {
+    return {
+      span: (domNode) => {
+        if (!domNode.hasAttribute("data-lexical-emoji")) {
+          return null;
+        }
+        return {
+          conversion: convertEmojiElement,
+          priority: 1,
+        };
+      },
+    };
   }
 }
 
