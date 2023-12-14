@@ -42,11 +42,14 @@ export class YouTubeNode extends DecoratorNode {
     return new YouTubeNode(node.__id, node.__key);
   }
 
+  /*
+  POC around making this Decorator node editable but found out later that it's not possible since Decorator nodes are always uneditable.
   createDOM() {
     const element = document.createElement("span");
     element.setAttribute("contenteditable", "true");
     return element;
   }
+  */
 
   isInline() {
     return true;
