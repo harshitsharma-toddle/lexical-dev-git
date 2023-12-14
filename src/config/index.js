@@ -8,6 +8,8 @@ import { EmojiNode } from "../nodes/EmojiNode";
 // import { HighlightTextNode } from "../nodes/HighlightTextNode";
 import { MentionNode } from "../nodes/MentionNode";
 import { ImageNode } from "../nodes/ImageNode";
+import { YouTubeNode } from "../nodes/YoutubeNode";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
 
 const config = {
   namespace: "lexical-dev-editor",
@@ -25,6 +27,9 @@ const config = {
     ColoredTextNode,
     MentionNode,
     ImageNode,
+    YouTubeNode,
+    AutoLinkNode,
+    LinkNode,
     // HighlightTextNode,
     // CustomParagraphNode,
     /*{

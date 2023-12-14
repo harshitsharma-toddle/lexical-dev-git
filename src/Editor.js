@@ -21,6 +21,8 @@ import MentionsPlugin from "./plugins/MentionsPlugin";
 import ImagePlugin from "./plugins/ImagePlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
 import { ContentLoadPlugin } from "./plugins/ContentLoadPlugin";
+import YouTubePlugin from "./plugins/YoutubePlugin";
+import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -47,6 +49,8 @@ export default function Editor(props) {
           <MentionsPlugin />
           <DragDropPaste />
           <ImagePlugin />
+          <AutoEmbedPlugin />
+          <YouTubePlugin />
         </>
       ) : (
         <PlainTextPlugin
