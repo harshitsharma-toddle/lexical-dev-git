@@ -1,6 +1,10 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $insertNodeToNearestRoot } from "@lexical/utils";
-import { COMMAND_PRIORITY_EDITOR, createCommand } from "lexical";
+import {
+  $insertNodes,
+  COMMAND_PRIORITY_EDITOR,
+  ParagraphNode,
+  createCommand,
+} from "lexical";
 import { useEffect } from "react";
 
 import { $createYouTubeNode } from "../../nodes/YoutubeNode";
@@ -15,7 +19,10 @@ export default function YouTubePlugin() {
       INSERT_YOUTUBE_COMMAND,
       (payload) => {
         const youTubeNode = $createYouTubeNode(payload);
-        $insertNodeToNearestRoot(youTubeNode);
+        const textnode = new ParagraphNode();
+        // insert youtube node inside a text node to make sure it is editable and inline .
+        textnode.append(youTubeNode);
+        $insertNodes([textnode, youTubeNode]);
         return true;
       },
       COMMAND_PRIORITY_EDITOR

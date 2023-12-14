@@ -23,7 +23,7 @@ import DragDropPaste from "./plugins/DragDropPastePlugin";
 import { ContentLoadPlugin } from "./plugins/ContentLoadPlugin";
 import YouTubePlugin from "./plugins/YoutubePlugin";
 import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
-import LinkPlugin from "./plugins/LinkPlugin";
+// import LinkPlugin from "./plugins/LinkPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
 
 export default function Editor(props) {
@@ -48,7 +48,7 @@ export default function Editor(props) {
           <ContentLoadPlugin content={props.content} />
           <EmojiPlugin />
           <TextToColoredPlugin />
-          <LinkPlugin />
+          {/* <LinkPlugin /> */}
           <AutoLinkPlugin />
           <MentionsPlugin />
           <DragDropPaste />

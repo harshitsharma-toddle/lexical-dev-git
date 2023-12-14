@@ -39,7 +39,7 @@ export class YouTubeNode extends DecoratorNode {
   }
 
   static clone(node) {
-    return new YouTubeNode(node.__id, node.__key);
+    return new YouTubeNode(node.__id, node.__format, node.__key);
   }
 
   createDOM() {
