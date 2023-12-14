@@ -3,7 +3,7 @@ import { $insertNodeToNearestRoot } from "@lexical/utils";
 import { COMMAND_PRIORITY_EDITOR, createCommand } from "lexical";
 import { useEffect } from "react";
 
-import { YouTubeNode, $createYouTubeNode } from "../../nodes/YoutubeNode";
+import { $createYouTubeNode } from "../../nodes/YoutubeNode";
 
 export const INSERT_YOUTUBE_COMMAND = createCommand("INSERT_YOUTUBE_COMMAND");
 
@@ -11,10 +11,6 @@ export default function YouTubePlugin() {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
-    if (!editor.hasNodes([YouTubeNode])) {
-      throw new Error("YouTubePlugin: YouTubeNode not registered on editor");
-    }
-
     return editor.registerCommand(
       INSERT_YOUTUBE_COMMAND,
       (payload) => {
