@@ -1,5 +1,5 @@
 import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents";
-import { DecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
+import { DecoratorNode } from "lexical";
 import * as React from "react";
 
 function YouTubeComponent({ className, format, nodeKey, videoID }) {
@@ -31,7 +31,7 @@ function convertYoutubeElement(domNode) {
   return null;
 }
 
-export class YouTubeNode extends DecoratorBlockNode {
+export class YouTubeNode extends DecoratorNode {
   __id;
 
   static getType() {
@@ -39,7 +39,17 @@ export class YouTubeNode extends DecoratorBlockNode {
   }
 
   static clone(node) {
-    return new YouTubeNode(node.__id, node.__format, node.__key);
+    return new YouTubeNode(node.__id, node.__key);
+  }
+
+  createDOM() {
+    const element = document.createElement("span");
+    element.setAttribute("contenteditable", "true");
+    return element;
+  }
+
+  isInline() {
+    return true;
   }
 
   static importJSON(serializedNode) {

@@ -16,7 +16,6 @@ export default function YouTubePlugin() {
       (payload) => {
         const youTubeNode = $createYouTubeNode(payload);
         $insertNodeToNearestRoot(youTubeNode);
-
         return true;
       },
       COMMAND_PRIORITY_EDITOR

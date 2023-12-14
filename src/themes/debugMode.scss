@@ -65,3 +65,14 @@
 .lexical-dev-heading-h2 span {
   color: palevioletred !important;
 }
+
+.lexical-dev-embedBlock {
+  user-select: none;
+  display: inline-block;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.lexical-dev-embedBlockFocus {
+  outline: 2px solid blue;
+}
