@@ -10,6 +10,7 @@ import { MentionNode } from "../nodes/MentionNode";
 import { ImageNode } from "../nodes/ImageNode";
 import { YouTubeNode } from "../nodes/YoutubeNode";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { VimeoNode } from "../nodes/VimeoNode";
 
 const config = {
   namespace: "lexical-dev-editor",
@@ -30,6 +31,7 @@ const config = {
     YouTubeNode,
     AutoLinkNode,
     LinkNode,
+    VimeoNode,
     // HighlightTextNode,
     // CustomParagraphNode,
     /*{

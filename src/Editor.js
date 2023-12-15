@@ -25,6 +25,7 @@ import YouTubePlugin from "./plugins/YoutubePlugin";
 import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
 // import LinkPlugin from "./plugins/LinkPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
+import VimeoPlugin from "./plugins/VimeoPlugin";
 
 export default function Editor(props) {
   const { enableRichText } = props;
@@ -64,6 +65,7 @@ export default function Editor(props) {
           <ImagePlugin />
           <AutoEmbedPlugin />
           <YouTubePlugin />
+          <VimeoPlugin />
         </>
       ) : (
         <PlainTextPlugin

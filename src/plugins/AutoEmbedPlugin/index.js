@@ -5,6 +5,7 @@ import {
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { INSERT_YOUTUBE_COMMAND } from "../YoutubePlugin";
+import { INSERT_VIMEO_COMMAND } from "../VimeoPlugin";
 
 export const YoutubeEmbedConfig = {
   contentName: "Youtube Video",
@@ -37,10 +38,42 @@ export const YoutubeEmbedConfig = {
     return null;
   },
 
-  type: "youtube-video",
+  type: "youtube",
 };
 
-export const EmbedConfigs = [YoutubeEmbedConfig];
+export const VimeoEmbedConfig = {
+  contentName: "vimeo",
+  exampleUrl: "https://vimeo.com/893600289",
+
+  insertNode: (editor, result) => {
+    editor.dispatchCommand(INSERT_VIMEO_COMMAND, {
+      type: "vimeo",
+      id: result.id,
+    });
+  },
+
+  keywords: ["vimeo", "video"],
+
+  // Determine if a given URL is a match and return url data.
+  parseUrl: async (url) => {
+    const match = /vimeo\.com\/(?:video\/)?(\d+)/.exec(url);
+
+    const id = match ? match[1] : null;
+
+    if (id != null) {
+      return {
+        id,
+        url,
+      };
+    }
+
+    return null;
+  },
+
+  type: "vimeo",
+};
+
+export const EmbedConfigs = [YoutubeEmbedConfig, VimeoEmbedConfig];
 
 function AutoEmbedMenuItem({
   index,
