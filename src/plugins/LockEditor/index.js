@@ -16,7 +16,7 @@ export default function LockEditor() {
   }
 
   return (
-    <button onClick={() => onClick()}>
+    <button className="toolbar-highlight" onClick={() => onClick()}>
       {isEditable ? "Lock " : "Unlock"} Editor
     </button>
   );

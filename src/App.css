@@ -1,3 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,200;1,300&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
 .app-wrapper {
   padding: 0 80px;
 }
@@ -164,4 +171,27 @@ i.user {
 .lexical-dev-image {
   position: relative;
   display: inline-block;
+}
+
+.toolbar-btn {
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  outline: none;
+  color: grey;
+  width: 50px;
+}
+
+.toolbar-btn:hover,
+.toolbar-highlight:hover {
+  background-color: #eee;
+  color: black;
+}
+
+.toolbar-highlight {
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  outline: none;
+  color: grey;
 }

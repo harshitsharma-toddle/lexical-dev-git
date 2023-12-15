@@ -17,12 +17,13 @@ export default function MyListPlugin() {
     <>
       {["ol", "ul"].map((listType) => (
         <button
+          className="toolbar-btn"
           onClick={() => {
             onClick(listType);
           }}
           key={listType}
         >
-          {listType}
+          {listType.toUpperCase()}
         </button>
       ))}
     </>

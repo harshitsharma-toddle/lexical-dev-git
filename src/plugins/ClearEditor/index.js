@@ -6,5 +6,9 @@ export default function ClearEditor() {
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
     return;
   };
-  return <button onClick={() => onClick()}>Clear Editor</button>;
+  return (
+    <button className="toolbar-highlight" onClick={() => onClick()}>
+      Clear Editor
+    </button>
+  );
 }

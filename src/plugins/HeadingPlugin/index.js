@@ -14,8 +14,8 @@ export default function HeadingPlugin() {
     });
   };
   return ["h1", "h2", "h3", "h4", "h5", "h6"].map((tag) => (
-    <button onClick={() => onClick(tag)} key={tag}>
-      {tag}
+    <button className="toolbar-btn" onClick={() => onClick(tag)} key={tag}>
+      {tag.toUpperCase()}
     </button>
   ));
 }

@@ -31,13 +31,22 @@ export default function Editor(props) {
 
   return (
     <LexicalComposer initialConfig={config}>
-      <HeadingPlugin />
-      <ListPlugin />
-      <MyListPlugin />
-      <HighlightPlugin />
-      <ClearEditorPlugin />
-      <ClearEditor />
-      <LockEditor />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: "40px",
+        }}
+      >
+        <HeadingPlugin />
+        <ListPlugin />
+        <MyListPlugin />
+        <HighlightPlugin />
+        <ClearEditorPlugin />
+        <ClearEditor />
+        <LockEditor />
+      </div>
       {enableRichText ? (
         <>
           <RichTextPlugin

@@ -19,10 +19,14 @@ export default function HighlightPlugin() {
   };
 
   return ["pink", "yellow", "aqua", "clear"].map((highlightColor) => (
-    <button onClick={() => onClick(highlightColor)} key={highlightColor}>
+    <button
+      className="toolbar-highlight"
+      onClick={() => onClick(highlightColor)}
+      key={highlightColor}
+    >
       {highlightColor !== "clear"
-        ? "Highlight: " + highlightColor
-        : "Clear Highlight"}
+        ? "highlight: " + highlightColor.toUpperCase()
+        : "CLEAR HIGHLIGHT"}
     </button>
   ));
 }
