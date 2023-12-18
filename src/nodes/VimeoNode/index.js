@@ -63,13 +63,11 @@ export class VimeoNode extends DecoratorNode {
 
   static importJSON(serializedNode) {
     const node = $createVimeoNode(serializedNode.videoID);
-    node.setFormat(serializedNode.format);
     return node;
   }
 
   exportJSON() {
     return {
-      ...super.exportJSON(),
       type: "vimeo",
       version: 1,
       videoID: this.__id,
