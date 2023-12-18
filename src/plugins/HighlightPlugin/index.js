@@ -26,7 +26,7 @@ export default function HighlightPlugin() {
     >
       {highlightColor !== "clear"
         ? "highlight: " + highlightColor.toUpperCase()
-        : "CLEAR HIGHLIGHT"}
+        : "Clear Highlight"}
     </button>
   ));
 }
