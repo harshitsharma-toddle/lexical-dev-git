@@ -134,7 +134,9 @@ i.user {
   background-image: url(./themes/user.svg);
 }
 
-.image-resizer {
+.image-resizer,
+.youtube-resizer,
+.vimeo-resizer {
   display: block;
   width: 8px;
   height: 8px;
@@ -166,6 +168,20 @@ i.user {
   top: -6px;
   left: -6px;
   cursor: nw-resize;
+}
+
+.youtube-resizer.youtube-resizer-e,
+.vimeo-resizer.vimeo-resizer-e {
+  bottom: 48%;
+  right: -6px;
+  cursor: e-resize;
+}
+
+.youtube-resizer.youtube-resizer-w,
+.vimeo-resizer.vimeo-resizer-w {
+  bottom: 48%;
+  left: -6px;
+  cursor: w-resize;
 }
 
 .lexical-dev-image {
