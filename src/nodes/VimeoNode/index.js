@@ -1,9 +1,84 @@
 import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents";
-import { DecoratorNode } from "lexical";
+import {
+  DecoratorNode,
+  $isNodeSelection,
+  $getNodeByKey,
+  $getSelection,
+  CLICK_COMMAND,
+  COMMAND_PRIORITY_LOW,
+} from "lexical";
 import * as React from "react";
+import VimeoResizer from "./VimeoResizer";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
+import { mergeRegister } from "@lexical/utils";
+import "./VimeoNode.css";
 
 function VimeoComponent({ className, format, nodeKey, videoID }) {
-  console.log("id", videoID);
+  const vimeoRef = React.useRef(null);
+  const [editor] = useLexicalComposerContext();
+  const [isSelected, setSelected, clearSelection] =
+    useLexicalNodeSelection(nodeKey);
+  const [isResizing, setIsResizing] = React.useState(false);
+  const [selection, setSelection] = React.useState(null);
+  const onResizeEnd = (nextWidth, nextHeight) => {
+    // Delay hiding the resize bars for click case
+    setTimeout(() => {
+      setIsResizing(false);
+    }, 200);
+
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if ($isVimeoNode(node)) {
+        node.setWidthAndHeight(nextWidth, nextHeight);
+      }
+    });
+  };
+
+  const onClick = React.useCallback(
+    (payload) => {
+      const event = payload;
+
+      if (isResizing) {
+        return true;
+      }
+      if (event.target === vimeoRef.current) {
+        if (event.shiftKey) {
+          setSelected(!isSelected);
+        } else {
+          clearSelection();
+          setSelected(true);
+        }
+        return true;
+      }
+
+      return false;
+    },
+    [isResizing, isSelected, setSelected, clearSelection]
+  );
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const unregister = mergeRegister(
+      editor.registerUpdateListener(({ editorState }) => {
+        if (isMounted) {
+          setSelection(editorState.read(() => $getSelection()));
+        }
+      }),
+
+      editor.registerCommand(CLICK_COMMAND, onClick, COMMAND_PRIORITY_LOW)
+    );
+
+    return () => {
+      isMounted = false;
+      unregister();
+    };
+  }, [editor, onClick]);
+
+  const onResizeStart = () => {
+    setIsResizing(true);
+  };
+  const isFocused = isSelected || isResizing;
   return (
     <BlockWithAlignableContents
       className={className}
@@ -11,6 +86,7 @@ function VimeoComponent({ className, format, nodeKey, videoID }) {
       nodeKey={nodeKey}
     >
       <iframe
+        ref={vimeoRef}
         width="560"
         height="315"
         src={`https://player.vimeo.com/video/${videoID.id}`}
@@ -19,6 +95,15 @@ function VimeoComponent({ className, format, nodeKey, videoID }) {
         title="vimeo video"
         allowFullScreen
       />
+      {$isNodeSelection(selection) && isFocused && (
+        <VimeoResizer
+          editor={editor}
+          vimeoRef={vimeoRef}
+          // maxWidth={maxWidth}
+          onResizeStart={onResizeStart}
+          onResizeEnd={onResizeEnd}
+        />
+      )}
     </BlockWithAlignableContents>
   );
 }
@@ -74,6 +159,12 @@ export class VimeoNode extends DecoratorNode {
     };
   }
 
+  setWidthAndHeight(width, height) {
+    const writable = this.getWritable();
+    writable.__width = width;
+    writable.__height = height;
+  }
+
   constructor(id, format, key) {
     super(format, key);
     this.__id = id;
@@ -118,7 +209,7 @@ export class VimeoNode extends DecoratorNode {
   }
 
   getTextContent(_includeInert, _includeDirectionless) {
-    return `https://www.youtube.com/watch?v=${this.__id}`;
+    return `https://www.vimeo.com/${this.__id}`;
   }
 
   decorate(_editor, config) {
@@ -142,6 +233,6 @@ export function $createVimeoNode(videoID) {
   return new VimeoNode(videoID);
 }
 
-export function $isYouTubeNode(node) {
+export function $isVimeoNode(node) {
   return node instanceof VimeoNode;
 }
