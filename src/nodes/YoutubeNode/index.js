@@ -1,8 +1,84 @@
 import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents";
-import { DecoratorNode } from "lexical";
+import {
+  DecoratorNode,
+  $isNodeSelection,
+  $getNodeByKey,
+  $getSelection,
+  CLICK_COMMAND,
+  COMMAND_PRIORITY_LOW,
+} from "lexical";
 import * as React from "react";
+import YoutubeResizer from "./YoutubeResizer";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
+import { mergeRegister } from "@lexical/utils";
+import "./YoutubeNode.css";
 
 function YouTubeComponent({ className, format, nodeKey, videoID }) {
+  const youtubeRef = React.useRef(null);
+  const [editor] = useLexicalComposerContext();
+  const [isSelected, setSelected, clearSelection] =
+    useLexicalNodeSelection(nodeKey);
+  const [isResizing, setIsResizing] = React.useState(false);
+  const [selection, setSelection] = React.useState(null);
+  const onResizeEnd = (nextWidth, nextHeight) => {
+    // Delay hiding the resize bars for click case
+    setTimeout(() => {
+      setIsResizing(false);
+    }, 200);
+
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if ($isYouTubeNode(node)) {
+        node.setWidthAndHeight(nextWidth, nextHeight);
+      }
+    });
+  };
+
+  const onClick = React.useCallback(
+    (payload) => {
+      const event = payload;
+
+      if (isResizing) {
+        return true;
+      }
+      if (event.target === youtubeRef.current) {
+        if (event.shiftKey) {
+          setSelected(!isSelected);
+        } else {
+          clearSelection();
+          setSelected(true);
+        }
+        return true;
+      }
+
+      return false;
+    },
+    [isResizing, isSelected, setSelected, clearSelection]
+  );
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const unregister = mergeRegister(
+      editor.registerUpdateListener(({ editorState }) => {
+        if (isMounted) {
+          setSelection(editorState.read(() => $getSelection()));
+        }
+      }),
+
+      editor.registerCommand(CLICK_COMMAND, onClick, COMMAND_PRIORITY_LOW)
+    );
+
+    return () => {
+      isMounted = false;
+      unregister();
+    };
+  }, [editor, onClick]);
+
+  const onResizeStart = () => {
+    setIsResizing(true);
+  };
+  const isFocused = isSelected || isResizing;
   return (
     <BlockWithAlignableContents
       className={className}
@@ -10,6 +86,7 @@ function YouTubeComponent({ className, format, nodeKey, videoID }) {
       nodeKey={nodeKey}
     >
       <iframe
+        ref={youtubeRef}
         width="560"
         height="315"
         src={`https://www.youtube-nocookie.com/embed/${videoID}`}
@@ -18,6 +95,15 @@ function YouTubeComponent({ className, format, nodeKey, videoID }) {
         allowFullScreen={true}
         title="YouTube video"
       />
+      {$isNodeSelection(selection) && isFocused && (
+        <YoutubeResizer
+          editor={editor}
+          youtubeRef={youtubeRef}
+          // maxWidth={maxWidth}
+          onResizeStart={onResizeStart}
+          onResizeEnd={onResizeEnd}
+        />
+      )}
     </BlockWithAlignableContents>
   );
 }
@@ -71,6 +157,12 @@ export class YouTubeNode extends DecoratorNode {
       version: 1,
       videoID: this.__id,
     };
+  }
+
+  setWidthAndHeight(width, height) {
+    const writable = this.getWritable();
+    writable.__width = width;
+    writable.__height = height;
   }
 
   constructor(id, format, key) {
